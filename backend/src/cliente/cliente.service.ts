@@ -7,12 +7,11 @@ const prisma = new PrismaClient();
 @Injectable()
 export class ClienteService {
   async create(data: CreateClienteDto) {
-    // Verifica se o CPF já existe
-    const existing = await prisma.cliente.findFirst({
+    const existing = (await prisma.cliente.findFirst({
       where: {
         OR: [{ cpf: data.cpf }, { email: data.email }],
       },
-    });
+    })) as { cpf: string; email: string } | null;
 
     if (existing) {
       if (existing.cpf === data.cpf) {
@@ -23,12 +22,9 @@ export class ClienteService {
       }
     }
 
-    // Cria o cliente
     const cliente = await prisma.cliente.create({
       data,
     });
-
-    console.log('cliente', cliente);
 
     return {
       message: 'Cadastro realizado com sucesso',

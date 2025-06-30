@@ -1,9 +1,6 @@
 import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
-import {
-  createClienteSchema,
-  CreateClienteDto,
-} from './dto/create-cliente.dto';
+import { createClienteSchema } from './dto/create-cliente.dto';
 import { ZodError } from 'zod';
 
 @Controller('clientes')
