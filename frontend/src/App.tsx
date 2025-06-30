@@ -31,7 +31,13 @@ export default function App() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast.success("Cliente cadastrado com sucesso!");
-      reset();
+      reset({
+        nome: "",
+        cpf: "",
+        email: "",
+        corPreferida: undefined,
+        observacoes: "",
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 409) {
