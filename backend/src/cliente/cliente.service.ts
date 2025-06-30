@@ -8,12 +8,19 @@ const prisma = new PrismaClient();
 export class ClienteService {
   async create(data: CreateClienteDto) {
     // Verifica se o CPF já existe
-    const existing = await prisma.cliente.findUnique({
-      where: { cpf: data.cpf },
+    const existing = await prisma.cliente.findFirst({
+      where: {
+        OR: [{ cpf: data.cpf }, { email: data.email }],
+      },
     });
 
     if (existing) {
-      throw new ConflictException('CPF já cadastrado');
+      if (existing.cpf === data.cpf) {
+        throw new ConflictException('CPF já cadastrado');
+      }
+      if (existing.email === data.email) {
+        throw new ConflictException('E-mail já cadastrado');
+      }
     }
 
     // Cria o cliente
@@ -21,7 +28,7 @@ export class ClienteService {
       data,
     });
 
-    console.log('cliente', cliente)
+    console.log('cliente', cliente);
 
     return {
       message: 'Cadastro realizado com sucesso',
