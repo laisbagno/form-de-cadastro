@@ -54,10 +54,10 @@ O objetivo é permitir que usuários cadastrem clientes com validação, persist
 ---
 
 ## 📂 Clone o repositório
-
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
-
+```bash
+git clone https://github.com/laisbagno/form-de-cadastro.git
+cd form-de-cadastro
+```
 ## ⚙️ Configurar o Backend
 
 Acesse a pasta do backend e instale as dependências:
