@@ -5,6 +5,7 @@ import type { ClienteFormData } from "./schemas";
 import { api } from "./services/api";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,12 +32,16 @@ export default function App() {
 
       toast.success("Cliente cadastrado com sucesso!");
       reset();
-    } catch (error: any) {
-      if (error.response?.status === 409) {
-        toast.error(error.response.data.message
-        );
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          toast.error(error.response.data.message
+          );
+        } else {
+          toast.error("Ocorreu um erro ao cadastrar o cliente.");
+        }
       } else {
-        toast.error("Ocorreu um erro ao cadastrar o cliente.");
+        toast.error("Erro inesperado.");
       }
     } finally {
       setIsLoading(false);
@@ -46,13 +51,11 @@ export default function App() {
   
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      {/* Lado esquerdo */}
       <div className="w-full md:w-1/2 bg-blue-600 text-white flex flex-col justify-center items-center p-10">
         <h1 className="text-4xl font-bold mb-4">Bem-vindo!</h1>
         <p className="text-lg text-center">Cadastre seus clientes de forma rápida e segura.</p>
       </div>
 
-      {/* Lado direito */}
       <div className="w-full md:w-1/2 flex justify-center items-center p-6 bg-gray-50">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
           <h2 className="text-2xl font-semibold mb-6">Cadastro de Cliente</h2>
@@ -71,9 +74,7 @@ export default function App() {
               placeholder="CPF"
               maxLength={14}
               onChange={(e) => {
-                // Remove tudo que não for dígito
                 let value = e.target.value.replace(/\D/g, "");
-                // Aplica a máscara
                 if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, "$1.$2");
                 if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
                 if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
@@ -91,7 +92,6 @@ export default function App() {
             />
             {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
-            {/* Radios */}
             <div className="space-y-2">
               <p className="font-medium">Cor Preferida</p>
               <div className="grid grid-cols-2 gap-2">
